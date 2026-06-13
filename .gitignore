@@ -41,6 +41,11 @@ node_modules
 # https://vitejs.dev/guide/env-and-mode.html#env-files
 *.local
 
-# Ignore editor-specific settings (machine-local).
-/.vscode
+# Editor: wersjonuj wspólną konfigurację projektu (settings/extensions), resztę ignoruj.
+/.vscode/*
+!/.vscode/settings.json
+!/.vscode/extensions.json
+
+# Ruby LSP (lokalny cache narzędzia).
+/.ruby-lsp
 

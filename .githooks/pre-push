@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#
+# pre-push — odpala lokalnie to samo co GitHub CI, żeby NIGDY nie pushować "na czerwono".
+# Kolejność (jak w .github/workflows/ci.yml): RuboCop -> Brakeman -> bundler-audit -> testy.
+# System-testy są TYLKO w CI (wolne, wymagają przeglądarki) — hook ma być szybki.
+# Pominięcie awaryjne (świadome): git push --no-verify
+#
+set -uo pipefail
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+step() { printf '\n\033[1;34m▶ pre-push: %s\033[0m\n' "$1"; }
+fail() {
+  printf '\n\033[1;31m❌ pre-push: %s padło — PUSH WSTRZYMANY.\033[0m\n' "$1"
+  printf '   Napraw i spróbuj ponownie (albo świadomie pomiń: git push --no-verify).\n\n'
+  exit 1
+}
+
+step "1/4 RuboCop (lint)"
+bin/rubocop || fail "RuboCop"
+
+step "2/4 Brakeman (skan bezpieczeństwa)"
+bin/brakeman --no-pager -q || fail "Brakeman"
+
+step "3/4 bundler-audit (CVE w gemach)"
+bin/bundler-audit || fail "bundler-audit"
+
+step "4/4 Testy (db:test:prepare + test)"
+bin/rails db:test:prepare test || fail "testy"
+
+printf '\n\033[1;32m✅ pre-push: wszystko zielone — pushuję.\033[0m\n'

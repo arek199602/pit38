@@ -56,6 +56,16 @@ Nie wczytuj całych PDF-ów (duże). Mapowanie pod ten projekt:
 - **Bezpieczenstwo_aplikacji_webowych** → bezpieczeństwo danych finansowych (szczeg. Faza 2 + RODO za cudze klucze brokerów).
 - **algorytmy (Sysło / Wróblewski)** → ogólne; ewentualnie przy FIFO/strukturach danych.
 
+## CI i pre-push (jakość — nigdy nie pushuj „na czerwono")
+- GitHub Actions (`.github/workflows/ci.yml`, domyślny Rails 8): **scan_ruby** (brakeman + bundler-audit), **lint** (rubocop), **test**, **system-test**. Odpala się na push do `main` i na PR.
+- **Lokalny pre-push hook** `.githooks/pre-push` (wersjonowany) odpala PRZED każdym pushem: RuboCop → Brakeman → bundler-audit → testy. Czerwone = push wstrzymany.
+  - Aktywacja (raz na maszynę/klon): `git config core.hooksPath .githooks`.
+  - Pominięcie awaryjne: `git push --no-verify`.
+  - **System-testy są TYLKO w CI** (wolne, wymagają przeglądarki) — hook ma być szybki.
+- RuboCop: styl omakase (`rubocop-rails-omakase`). Po generatorach (Inertia/Vite) odpalaj `bin/rubocop -a` (autopoprawki). Pliki po instalatorach (kontroler Inertia, `content_security_policy.rb`, `routes.rb`) wymagały korekty — zrobione.
+- **Formatter w edytorze = RuboCop** (wtyczka `rubocop.vscode-rubocop`), **NIE Rufo.** `.vscode/{settings,extensions}.json` są wersjonowane i ustawiają RuboCop jako formatter Ruby (spójność: edytor = pre-push = CI). Jeśli VS Code krzyczy „Rufo failed (127)" → wyłącz/odinstaluj wtyczkę Rufo (zły, konkurencyjny formatter). Dla Vue: `Vue.volar`.
+- `db/schema.rb` istnieje od 2026-06-13 (`define(version: 0)`, pusty) — `db:test:prepare` działa. Pierwsza migracja (Transaction) wypełni go realnie.
+
 ## Łańcuch 30-min — status
 - ✅ **Krok 1** — szkielet Rails 8.1.3 + Inertia + Vue (commit `e300be3`).
 - ✅ **Krok 2** — `bin/dev` → strona Vue żyje na **localhost:3000**, Ruby 4.0.5 (commit `3d306b8`; potwierdzone screenshotem 2026-06-13).

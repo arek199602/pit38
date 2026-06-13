@@ -1,0 +1,11 @@
+{
+  "[ruby]": {
+    "editor.defaultFormatter": "rubocop.vscode-rubocop",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "rubyLsp.formatter": "rubocop",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true
+}

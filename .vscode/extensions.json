@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "rubocop.vscode-rubocop",
+    "Shopify.ruby-lsp",
+    "Vue.volar"
+  ],
+  "unwantedRecommendations": [
+    "mbessey.vscode-rufo"
+  ]
+}
