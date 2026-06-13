@@ -5,6 +5,7 @@
     "Vue.volar"
   ],
   "unwantedRecommendations": [
-    "mbessey.vscode-rufo"
+    "mbessey.vscode-rufo",
+    "ruby-syntax-tree.vscode-syntax-tree"
   ]
 }

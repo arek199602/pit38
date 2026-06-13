@@ -57,11 +57,12 @@ Nie wczytuj całych PDF-ów (duże). Mapowanie pod ten projekt:
 - **algorytmy (Sysło / Wróblewski)** → ogólne; ewentualnie przy FIFO/strukturach danych.
 
 ## CI i pre-push (jakość — nigdy nie pushuj „na czerwono")
-- GitHub Actions (`.github/workflows/ci.yml`, domyślny Rails 8): **scan_ruby** (brakeman + bundler-audit), **lint** (rubocop), **test**, **system-test**. Odpala się na push do `main` i na PR.
+- GitHub Actions (`.github/workflows/ci.yml`): **scan_ruby** (brakeman + bundler-audit), **lint** (rubocop), **test**, **system-test**. Odpala się na push do `main` i na PR.
+- **system-test** (Capybara + **Playwright**, headless chromium — świadomie BEZ Selenium, user ma 3 lata złych doświadczeń: false-negatives/flakiness): dodane 2026-06-13: `test/application_system_test_case.rb` (rejestruje driver `:playwright`) + smoke `test/system/home_test.rb` (wizyta na `root`, asercja że Vue się montuje). Job CI ma **Node + `npm ci` + `npx playwright install --with-deps chromium`**, bo Vite w teście (`config/vite.json` → test: `autoBuild`) buduje assety na żądanie. **FOOTGUN:** wersja npm `playwright` MUSI = wersji gemu `playwright-ruby-client` (teraz **1.60.0** ↔ `playwright@1.60.0`). Node w `.node-version` (22.17.1). Tu pójdą testy UI kalkulatora (wklejenie CSV → wynik).
 - **Lokalny pre-push hook** `.githooks/pre-push` (wersjonowany) odpala PRZED każdym pushem: RuboCop → Brakeman → bundler-audit → testy. Czerwone = push wstrzymany.
   - Aktywacja (raz na maszynę/klon): `git config core.hooksPath .githooks`.
   - Pominięcie awaryjne: `git push --no-verify`.
-  - **System-testy są TYLKO w CI** (wolne, wymagają przeglądarki) — hook ma być szybki.
+  - **System-testy: TYLKO w CI** (wolne, wymagają przeglądarki + budowania Vite) — hook ma być szybki, żebyś nie zaczął go omijać. Hook pokrywa lint + scan_ruby + test.
 - RuboCop: styl omakase (`rubocop-rails-omakase`). Po generatorach (Inertia/Vite) odpalaj `bin/rubocop -a` (autopoprawki). Pliki po instalatorach (kontroler Inertia, `content_security_policy.rb`, `routes.rb`) wymagały korekty — zrobione.
 - **Formatter w edytorze = RuboCop** (wtyczka `rubocop.vscode-rubocop`), **NIE Rufo.** `.vscode/{settings,extensions}.json` są wersjonowane i ustawiają RuboCop jako formatter Ruby (spójność: edytor = pre-push = CI). Jeśli VS Code krzyczy „Rufo failed (127)" → wyłącz/odinstaluj wtyczkę Rufo (zły, konkurencyjny formatter). Dla Vue: `Vue.volar`.
 - `db/schema.rb` istnieje od 2026-06-13 (`define(version: 0)`, pusty) — `db:test:prepare` działa. Pierwsza migracja (Transaction) wypełni go realnie.

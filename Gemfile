@@ -54,9 +54,9 @@ group :development do
 end
 
 group :test do
-  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+  # System testy: Capybara + Playwright (świadomie BEZ Selenium — złe doświadczenia z flakiness)
   gem "capybara"
-  gem "selenium-webdriver"
+  gem "capybara-playwright-driver"
 end
 
 gem "inertia_rails", "~> 3.21"
