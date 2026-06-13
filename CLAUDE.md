@@ -56,5 +56,9 @@ Nie wczytuj całych PDF-ów (duże). Mapowanie pod ten projekt:
 - **Bezpieczenstwo_aplikacji_webowych** → bezpieczeństwo danych finansowych (szczeg. Faza 2 + RODO za cudze klucze brokerów).
 - **algorytmy (Sysło / Wróblewski)** → ogólne; ewentualnie przy FIFO/strukturach danych.
 
-## Następny krok
-Krok 2 łańcucha: `bin/dev` → zobacz stronę Vue (localhost:3100). Potem krok 3: model `Transaction` (broker, typ, data, ticker, ilość, cena, waluta, prowizja).
+## Łańcuch 30-min — status
+- ✅ **Krok 1** — szkielet Rails 8.1.3 + Inertia + Vue (commit `e300be3`).
+- ✅ **Krok 2** — `bin/dev` → strona Vue żyje na **localhost:3000**, Ruby 4.0.5 (commit `3d306b8`; potwierdzone screenshotem 2026-06-13).
+- ▶ **Krok 3 (następny)** — model `Transaction`: broker, typ (buy/sell/dividend/fee), data, ticker, ilość, cena, waluta, prowizja. **Kwoty = `decimal` (precision/scale), NIGDY float** (zaokrąglenia → zły podatek).
+  - Pre-reading usera (guides.rubyonrails.org): Active Record Basics + Active Record Migrations.
+  - Ja czytam przed kodem: Sustainable Rails — rozdz. o bazie/migracjach (NOT NULL / FK / indeksy na poziomie DB); podać userowi numer rozdziału.
