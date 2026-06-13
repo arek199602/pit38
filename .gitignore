@@ -49,3 +49,6 @@ node_modules
 # Ruby LSP (lokalny cache narzędzia).
 /.ruby-lsp
 
+# Osobisty plik nauki użytkownika (lokalny tracker czytania, nie do repo).
+/MOJA-NAUKA.md
+
