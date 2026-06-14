@@ -51,6 +51,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Annotate models/fixtures with the DB schema (maintained fork of annotate)
+  gem "annotaterb"
 end
 
 group :test do

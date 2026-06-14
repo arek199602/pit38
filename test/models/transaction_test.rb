@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: transactions
+#
+#  id               :bigint           not null, primary key
+#  broker           :string           not null
+#  currency         :string           not null
+#  fee              :decimal(18, 8)   default(0.0), not null
+#  price            :decimal(18, 8)   default(0.0), not null
+#  quantity         :decimal(18, 8)   default(0.0), not null
+#  ticker           :string           not null
+#  transacted_on    :date             not null
+#  transaction_type :string           not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+# Indexes
+#
+#  index_transactions_on_ticker_and_transacted_on  (ticker,transacted_on)
+#
 require "test_helper"
 
 class TransactionTest < ActiveSupport::TestCase

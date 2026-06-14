@@ -48,6 +48,7 @@ Konkuruj w istniejącym rynku (konkurenci = dowód popytu), wygraj kanał intenc
 1. Pracując nad kodem, ZANIM zaproponujesz rozwiązanie, **przeczytaj odpowiednią sekcję** (głównie Sustainable Rails / Layered Design / Polished Ruby) i zastosuj jej konwencje. Nie improwizuj.
 2. **Po przeczytaniu — POWIEDZ użytkownikowi, co przeczytałeś** (książka + rozdział/sekcja), żeby mógł przeczytać to samo i poszerzyć horyzonty.
 3. Na każdym kroku **ZLECAJ użytkownikowi przeczytanie odpowiednich sekcji z https://guides.rubyonrails.org/** (z konkretnym URL), żeby aktywnie uczestniczył w developmencie i się uczył.
+4. User ma **premium GoRails** (gorails.com — screencasty Rails od Chrisa Olivera) → możesz mu ZLECAĆ konkretne filmy (z URL) jako materiał do obejrzenia, jak Rails Guides. Świetne pod tematy Rails: Hotwire/Turbo, Active Record, payments (Stripe), deployment, testing.
 Nie wczytuj całych PDF-ów (duże). Mapowanie pod ten projekt:
 - **Sustainable Web Development with Ruby on Rails** (Copeland) → domyślne źródło decyzji architektonicznych/konwencji pit38 (struktura, utrzymywalność).
 - **layered_design_for_ruby_on_rails_applications** → gdzie umieścić logikę (silnik podatkowy jako warstwa/serwis, nie w modelu/kontrolerze).
