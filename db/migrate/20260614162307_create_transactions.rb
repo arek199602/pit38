@@ -5,8 +5,8 @@ class CreateTransactions < ActiveRecord::Migration[8.1]
       t.string :transaction_type, null: false
       t.date :transacted_on, null: false
       t.string :ticker, null: false
-      # Kwoty: decimal, NIGDY float (IEEE 754 gubi grosze → zły podatek).
-      # scale 8 = ułamkowe akcje / krypto; precision 18 = duży zapas.
+      # Money: decimal, NEVER float (IEEE 754 loses cents -> wrong tax).
+      # scale 8 = fractional shares / crypto; precision 18 = plenty of headroom.
       t.decimal :quantity, precision: 18, scale: 8, null: false, default: 0
       t.decimal :price, precision: 18, scale: 8, null: false, default: 0
       t.string :currency, null: false
@@ -14,10 +14,10 @@ class CreateTransactions < ActiveRecord::Migration[8.1]
 
       t.timestamps
 
-      # Indeks pod FIFO: przetwarzamy transakcje per ticker, w kolejności dat.
+      # Index for FIFO: transactions are processed per ticker, ordered by date.
       t.index [ :ticker, :transacted_on ]
 
-      # Constraints w bazie = ostatnia linia obrony poprawności (Copeland, rozdz. 14).
+      # DB constraints = the last line of defense for correctness (Copeland, ch. 14).
       t.check_constraint "transaction_type IN ('buy', 'sell', 'dividend', 'fee')",
         name: "transactions_type_valid"
       t.check_constraint "fee >= 0", name: "transactions_fee_non_negative"

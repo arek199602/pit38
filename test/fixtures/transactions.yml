@@ -1,5 +1,5 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-# Wartości transaction_type muszą być prawidłowe (CHECK constraint w bazie).
+# transaction_type values must be valid (matches the DB CHECK constraint).
 
 aapl_buy:
   broker: trading212

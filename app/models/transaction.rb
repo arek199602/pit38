@@ -1,6 +1,7 @@
 class Transaction < ApplicationRecord
-  # Typ transakcji: string w bazie (+ CHECK constraint), tu wygodne API:
-  # buy?, sell!, scope Transaction.dividend itd. Wartości MUSZĄ zgadzać się z CHECK w migracji.
+  # transaction_type is a string column (+ DB CHECK constraint); the enum adds the
+  # convenient API (buy?, sell!, Transaction.dividend scope). Values MUST match the
+  # CHECK constraint in the migration.
   enum :transaction_type, { buy: "buy", sell: "sell", dividend: "dividend", fee: "fee" }
 
   validates :broker, :transaction_type, :transacted_on, :ticker, :currency, presence: true
