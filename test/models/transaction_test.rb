@@ -31,12 +31,12 @@ class TransactionTest < ActiveSupport::TestCase
     assert t.save
   end
 
-  test "kwoty są BigDecimal, nie float (precyzja podatkowa)" do
+  test "money fields are BigDecimal, not float (tax precision)" do
     assert_kind_of BigDecimal, transactions(:aapl_buy).price
     assert_kind_of BigDecimal, transactions(:aapl_buy).quantity
   end
 
-  test "wymaga brokera, tickera, waluty i daty" do
+  test "requires broker, ticker, currency and date" do
     t = Transaction.new
     assert_not t.valid?
     assert t.errors[:broker].any?
@@ -45,13 +45,13 @@ class TransactionTest < ActiveSupport::TestCase
     assert t.errors[:transacted_on].any?
   end
 
-  test "prowizja nie może być ujemna" do
+  test "fee cannot be negative" do
     t = transactions(:aapl_buy)
     t.fee = -1
     assert_not t.valid?
   end
 
-  test "enum transaction_type daje metody buy?/sell?" do
+  test "transaction_type enum provides buy?/sell? methods" do
     assert transactions(:aapl_buy).buy?
     assert transactions(:aapl_sell).sell?
   end
