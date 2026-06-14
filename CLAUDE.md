@@ -9,7 +9,7 @@ Kalkulator podatku PIT-38 (zyski kapitałowe) dla **polskich inwestorów z zagra
 - **Faza 2 (później, dochód):** produkt dla złożonego inwestora multi-broker. Klin = konsolidacja T212+IBKR+Revolut, opcje/crypto, auto-strata. NIE „taniej dla małych".
 
 ## Stack
-- **Rails 8.1.3** + **inertia_rails 3.21.2** + **Vue 3** + **Vite** (vite_rails). **PostgreSQL 14** (gem `pg`, Homebrew `postgresql@14`). Ruby 4.0.5.
+- **Rails 8.1.3** + **inertia_rails 3.21.2** + **Vue 3** + **Vite** (vite_rails). **PostgreSQL 16** (gem `pg`, Homebrew `postgresql@16`). Ruby 4.0.5.
 - Wybór: użytkownik chciał inertia_rails + Nuxt3, ale to się nie łączy (Inertia nie ma adaptera na Nuxt) → ustalono **Inertia + Vue** (jego umiejętności Nuxt/Vue wchodzą 1:1).
 - **Ruby 4.0.5** zainstalowane i ustawione dla pit38 (`.ruby-version` = 4.0.5), `bundle install` czysty, zweryfikowane (`ruby -v` → 4.0.5, `rails -v` → 8.1.3). (ruby-build trzeba było zaktualizować: `git -C ~/.rbenv/plugins/ruby-build pull`.)
 - Uruchamianie: `bin/dev` → web na **localhost:3000** (wymuszone w `Procfile.dev`: `bin/rails s -p 3000`; w env usera jest `PORT=3100`, ale `-p` nadpisuje to tylko dla pit38). Vite na :3036.
@@ -65,7 +65,7 @@ Nie wczytuj całych PDF-ów (duże). Mapowanie pod ten projekt:
   - **System-testy: TYLKO w CI** (wolne, wymagają przeglądarki + budowania Vite) — hook ma być szybki, żebyś nie zaczął go omijać. Hook pokrywa lint + scan_ruby + test.
 - RuboCop: styl omakase (`rubocop-rails-omakase`). Po generatorach (Inertia/Vite) odpalaj `bin/rubocop -a` (autopoprawki). Pliki po instalatorach (kontroler Inertia, `content_security_policy.rb`, `routes.rb`) wymagały korekty — zrobione.
 - **Formatter w edytorze = RuboCop** (wtyczka `rubocop.vscode-rubocop`), **NIE Rufo.** `.vscode/{settings,extensions}.json` są wersjonowane i ustawiają RuboCop jako formatter Ruby (spójność: edytor = pre-push = CI). Jeśli VS Code krzyczy „Rufo failed (127)" → wyłącz/odinstaluj wtyczkę Rufo (zły, konkurencyjny formatter). Dla Vue: `Vue.volar`.
-- **Baza: PostgreSQL** (przeszliśmy z SQLite 2026-06-14, decyzja usera) — standard produkcyjny + odblokowuje porady Copelanda (rozdz. 14). Lokalnie Homebrew `postgresql@14` (socket /tmp:5432), bazy `pit38_development`/`pit38_test`. CI: serwis `postgres:16` + env `PGHOST/PGUSER/PGPASSWORD`. Lock ma platformy linux (prekompilowany `pg` na CI). `schema.rb` (format :ruby) łapie nasze CHECK constraints. (Opcja later: `schema_format: :sql` dla pełnych feature'ów PG.)
+- **Baza: PostgreSQL** (przeszliśmy z SQLite 2026-06-14, decyzja usera) — standard produkcyjny + odblokowuje porady Copelanda (rozdz. 14). Lokalnie Homebrew `postgresql@16` (socket /tmp:5432; **parytet z CI** `postgres:16`), bazy `pit38_development`/`pit38_test`. CI: serwis `postgres:16` + env `PGHOST/PGUSER/PGPASSWORD`. Lock ma platformy linux (prekompilowany `pg` na CI). `schema.rb` (format :ruby) łapie nasze CHECK constraints. (Opcja later: `schema_format: :sql` dla pełnych feature'ów PG.)
 
 ## Łańcuch 30-min — status
 - ✅ **Krok 1** — szkielet Rails 8.1.3 + Inertia + Vue (commit `e300be3`).
