@@ -9,7 +9,7 @@ Kalkulator podatku PIT-38 (zyski kapitałowe) dla **polskich inwestorów z zagra
 - **Faza 2 (później, dochód):** produkt dla złożonego inwestora multi-broker. Klin = konsolidacja T212+IBKR+Revolut, opcje/crypto, auto-strata. NIE „taniej dla małych".
 
 ## Stack
-- **Rails 8.1.3** + **inertia_rails 3.21.2** + **Vue 3** + **Vite** (vite_rails). SQLite. Ruby 3.4.4.
+- **Rails 8.1.3** + **inertia_rails 3.21.2** + **Vue 3** + **Vite** (vite_rails). **PostgreSQL 14** (gem `pg`, Homebrew `postgresql@14`). Ruby 4.0.5.
 - Wybór: użytkownik chciał inertia_rails + Nuxt3, ale to się nie łączy (Inertia nie ma adaptera na Nuxt) → ustalono **Inertia + Vue** (jego umiejętności Nuxt/Vue wchodzą 1:1).
 - **Ruby 4.0.5** zainstalowane i ustawione dla pit38 (`.ruby-version` = 4.0.5), `bundle install` czysty, zweryfikowane (`ruby -v` → 4.0.5, `rails -v` → 8.1.3). (ruby-build trzeba było zaktualizować: `git -C ~/.rbenv/plugins/ruby-build pull`.)
 - Uruchamianie: `bin/dev` → web na **localhost:3000** (wymuszone w `Procfile.dev`: `bin/rails s -p 3000`; w env usera jest `PORT=3100`, ale `-p` nadpisuje to tylko dla pit38). Vite na :3036.
@@ -65,11 +65,10 @@ Nie wczytuj całych PDF-ów (duże). Mapowanie pod ten projekt:
   - **System-testy: TYLKO w CI** (wolne, wymagają przeglądarki + budowania Vite) — hook ma być szybki, żebyś nie zaczął go omijać. Hook pokrywa lint + scan_ruby + test.
 - RuboCop: styl omakase (`rubocop-rails-omakase`). Po generatorach (Inertia/Vite) odpalaj `bin/rubocop -a` (autopoprawki). Pliki po instalatorach (kontroler Inertia, `content_security_policy.rb`, `routes.rb`) wymagały korekty — zrobione.
 - **Formatter w edytorze = RuboCop** (wtyczka `rubocop.vscode-rubocop`), **NIE Rufo.** `.vscode/{settings,extensions}.json` są wersjonowane i ustawiają RuboCop jako formatter Ruby (spójność: edytor = pre-push = CI). Jeśli VS Code krzyczy „Rufo failed (127)" → wyłącz/odinstaluj wtyczkę Rufo (zły, konkurencyjny formatter). Dla Vue: `Vue.volar`.
-- `db/schema.rb` istnieje od 2026-06-13 (`define(version: 0)`, pusty) — `db:test:prepare` działa. Pierwsza migracja (Transaction) wypełni go realnie.
+- **Baza: PostgreSQL** (przeszliśmy z SQLite 2026-06-14, decyzja usera) — standard produkcyjny + odblokowuje porady Copelanda (rozdz. 14). Lokalnie Homebrew `postgresql@14` (socket /tmp:5432), bazy `pit38_development`/`pit38_test`. CI: serwis `postgres:16` + env `PGHOST/PGUSER/PGPASSWORD`. Lock ma platformy linux (prekompilowany `pg` na CI). `schema.rb` (format :ruby) łapie nasze CHECK constraints. (Opcja later: `schema_format: :sql` dla pełnych feature'ów PG.)
 
 ## Łańcuch 30-min — status
 - ✅ **Krok 1** — szkielet Rails 8.1.3 + Inertia + Vue (commit `e300be3`).
 - ✅ **Krok 2** — `bin/dev` → strona Vue żyje na **localhost:3000**, Ruby 4.0.5 (commit `3d306b8`; potwierdzone screenshotem 2026-06-13).
-- ▶ **Krok 3 (następny)** — model `Transaction`: broker, typ (buy/sell/dividend/fee), data, ticker, ilość, cena, waluta, prowizja. **Kwoty = `decimal` (precision/scale), NIGDY float** (zaokrąglenia → zły podatek).
-  - Pre-reading usera (guides.rubyonrails.org): Active Record Basics + Active Record Migrations.
-  - Ja czytam przed kodem: Sustainable Rails — rozdz. o bazie/migracjach (NOT NULL / FK / indeksy na poziomie DB); podać userowi numer rozdziału.
+- ✅ **Krok 3 (2026-06-14)** — model `Transaction` + migracja na **PostgreSQL**. Kolumny: broker, **`transaction_type`** (NIE `type` — to STI w Rails! + Rails enum + CHECK constraint), `transacted_on` (date), ticker, quantity/price/fee (**decimal 18,8 → BigDecimal, nie float**), currency. Indeks `[ticker, transacted_on]` pod FIFO. **5 testów modelu zielonych** na Postgresie. Przeczytałem Sustainable Rails rozdz. **14 „The Database"** (correctness, decimal>float, date≠timestamp, constraints w bazie).
+- ▶ **Krok 4 (następny)** — ręczny formularz „dodaj transakcję" (CRUD/scaffold) → móc ręcznie wbić kilka transakcji do testów silnika.

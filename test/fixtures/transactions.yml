@@ -1,0 +1,22 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# Wartości transaction_type muszą być prawidłowe (CHECK constraint w bazie).
+
+aapl_buy:
+  broker: trading212
+  transaction_type: buy
+  transacted_on: 2024-03-15
+  ticker: AAPL
+  quantity: 10.0
+  price: 172.50
+  currency: USD
+  fee: 0.0
+
+aapl_sell:
+  broker: trading212
+  transaction_type: sell
+  transacted_on: 2024-09-20
+  ticker: AAPL
+  quantity: 10.0
+  price: 195.00
+  currency: USD
+  fee: 0.15
