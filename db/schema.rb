@@ -27,6 +27,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_14_162307) do
     t.datetime "updated_at", null: false
     t.index ["ticker", "transacted_on"], name: "index_transactions_on_ticker_and_transacted_on"
     t.check_constraint "fee >= 0::numeric", name: "transactions_fee_non_negative"
-    t.check_constraint "transaction_type::text = ANY (ARRAY['buy'::character varying, 'sell'::character varying, 'dividend'::character varying, 'fee'::character varying]::text[])", name: "transactions_type_valid"
+    t.check_constraint "transaction_type::text = ANY (ARRAY['buy'::character varying::text, 'sell'::character varying::text, 'dividend'::character varying::text, 'fee'::character varying::text])", name: "transactions_type_valid"
   end
 end
