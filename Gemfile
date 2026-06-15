@@ -6,6 +6,9 @@ gem "rails", "~> 8.1.3"
 gem "propshaft"
 # Use PostgreSQL as the database for Active Record
 gem "pg", "~> 1.5"
+
+# Catch unsafe migrations (table locks on large tables) in dev/CI before production
+gem "strong_migrations"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
