@@ -22,6 +22,8 @@ class Transaction < ApplicationRecord
   # transaction_type is a string column (+ DB CHECK constraint); the enum adds the
   # convenient API (buy?, sell!, Transaction.dividend scope). Values MUST match the
   # CHECK constraint in the migration.
+  # enum + CHECK (not a lookup table) because the value set is STABLE -- buy/sell/
+  # dividend/fee are fixed tax-domain concepts with no per-value attributes.
   enum :transaction_type, { buy: "buy", sell: "sell", dividend: "dividend", fee: "fee" }
 
   validates :broker, :transaction_type, :transacted_on, :ticker, :currency, presence: true
