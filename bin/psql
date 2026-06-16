@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Connect straight to the development database via psql.
+#
+# `bin/rails dbconsole` also works, but boots Rails first (~1.7s) just to
+# delegate to psql; this is instant. Our dev DB uses a local socket + trust
+# auth, so no password is needed. Extra args are passed through, e.g.:
+#   bin/psql -c "SELECT count(*) FROM transactions;"
+exec psql pit38_development "$@"
