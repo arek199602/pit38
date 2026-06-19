@@ -115,7 +115,7 @@ jobs:
           bundler-cache: true
 
       - name: Set up Node (potrzebny, by Vite zbudował assety w system-testach)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .node-version
           cache: npm
